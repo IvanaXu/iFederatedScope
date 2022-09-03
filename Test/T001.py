@@ -1,8 +1,8 @@
 import sys
 if len(sys.argv) > 1:
-    datp = "../../data/CIKM22Competition"
+    datp = "/root/proj/data/CIKM22Competition/"
 else:
-    datp = "/Users/ivan/Library/CloudStorage/OneDrive-个人/Code/CIKM2022/data/CIKM22Competition"
+    datp = "/Users/ivan/Library/CloudStorage/OneDrive-个人/Code/CIKM2022/data/CIKM22Competition/"
 
 #
 # pip install torch -i https://pypi.tuna.tsinghua.edu.cn/simple
