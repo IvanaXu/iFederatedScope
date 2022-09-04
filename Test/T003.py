@@ -11,10 +11,10 @@ import numpy as np
 import pandas as pd
 
 
-def get_data(cid, data_type, _cal="mean", _get_edge_attr=False):
+def get_data(cid, data_type, _cal="mean", is_edge_attr=False):
     _data = torch.load(f"{datp}/{cid}/{data_type}.pt")
     _lx, _ly = _data[0].x.shape[1], _data[0].y.shape[1]
-    _ledge_attr = _data[0].edge_attr.shape[1] if _get_edge_attr else 0
+    _ledge_attr = _data[0].edge_attr.shape[1] if is_edge_attr else 0
     _xcols = [f"x{i}" for i in range(_lx)]
 
     xdata, ydata, index_data, edge_attr_data = [], [], [], []
@@ -75,33 +75,36 @@ def get_predict2(x, mL):
     ], axis=0)]
 
 
-# cid, task_type, metric, cal, K, model, score, predict
+# cid, task_type, metric, cal, is_edge_attr, K, model, score, predict
 ids = [
-    [1, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
-    [2, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
-    [3, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
-    [4, ["cls", "Error rate", "max", 4, get_model1, get_score1, get_predict1]],
-    [5, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
-    [6, ["cls", "Error rate", "min", 6, get_model1, get_score1, get_predict1]],
-    [7, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
-    [8, ["cls", "Error rate", "std", 8, get_model1, get_score1, get_predict1]],
-    #
-    [9, ["reg", "MSE", "mean", 6, get_model2, get_score2, get_predict2]],
-    [10, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
-    [11, ["reg", "MSE", "std", 8, get_model2, get_score2, get_predict2]],
-    [12, ["reg", "MSE", "std", 6, get_model2, get_score2, get_predict2]],
-    [13, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    [1, ["cls", "Error rate", "mean", True, 10, get_model1, get_score1, get_predict1]],
+    [2, ["cls", "Error rate", "max", True, 8, get_model1, get_score1, get_predict1]],
+    # 3, no edge_attr, set False
+    [3, ["cls", "Error rate", "max", False, 8, get_model1, get_score1, get_predict1]],
+    [4, ["cls", "Error rate", "max", True, 4, get_model1, get_score1, get_predict1]],
+    [5, ["cls", "Error rate", "max", True, 8, get_model1, get_score1, get_predict1]],
+    [6, ["cls", "Error rate", "min", True, 6, get_model1, get_score1, get_predict1]],
+    # 7, no edge_attr, set False
+    [7, ["cls", "Error rate", "mean", False, 10, get_model1, get_score1, get_predict1]],
+    [8, ["cls", "Error rate", "std", True, 8, get_model1, get_score1, get_predict1]],
+
+    # 10/13, more Y
+    [9, ["reg", "MSE", "mean", True, 6, get_model2, get_score2, get_predict2]],
+    [10, ["reg", "MSE", "mean", True, 8, get_model2, get_score2, get_predict2]],
+    [11, ["reg", "MSE", "std", True, 8, get_model2, get_score2, get_predict2]],
+    [12, ["reg", "MSE", "std", True, 6, get_model2, get_score2, get_predict2]],
+    [13, ["reg", "MSE", "mean", True, 8, get_model2, get_score2, get_predict2]],
 ]
 
 
 result = []
 for [cid, paras] in tqdm(ids):
     print(f"\nID {cid}:")
-    [task_type, metric, cal, K, model, score, predict] = paras
+    [task_type, metric, cal, is_edge_attr, K, model, score, predict] = paras
 
-    train_data, xcols, ly = get_data(cid, "train", cal)
-    valis_data, _1, _2 = get_data(cid, "val", cal)
-    tests_data, _3, _4 = get_data(cid, "test", cal)
+    train_data, xcols, ly = get_data(cid, "train", cal, is_edge_attr)
+    valis_data, _1, _2 = get_data(cid, "val", cal, is_edge_attr)
+    tests_data, _3, _4 = get_data(cid, "test", cal, is_edge_attr)
 
     i_result = pd.DataFrame([cid for i in tests_data["data_index"]], columns=["client_id"])
     i_result["sample_id"] = tests_data["data_index"]
