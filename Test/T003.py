@@ -78,22 +78,22 @@ def get_predict2(x, mL):
 # cid, task_type, metric, cal, is_edge_attr, K, model, score, predict
 ids = [
     [1, ["cls", "Error rate", "mean", True, 10, get_model1, get_score1, get_predict1]],
-    [2, ["cls", "Error rate", "max", True, 8, get_model1, get_score1, get_predict1]],
+    [2, ["cls", "Error rate", "max", False, 8, get_model1, get_score1, get_predict1]],
     # 3, no edge_attr, set False
     [3, ["cls", "Error rate", "max", False, 8, get_model1, get_score1, get_predict1]],
     [4, ["cls", "Error rate", "max", True, 4, get_model1, get_score1, get_predict1]],
-    [5, ["cls", "Error rate", "max", True, 8, get_model1, get_score1, get_predict1]],
-    [6, ["cls", "Error rate", "min", True, 6, get_model1, get_score1, get_predict1]],
+    [5, ["cls", "Error rate", "max", False, 8, get_model1, get_score1, get_predict1]],
+    [6, ["cls", "Error rate", "min", False, 6, get_model1, get_score1, get_predict1]],
     # 7, no edge_attr, set False
     [7, ["cls", "Error rate", "mean", False, 10, get_model1, get_score1, get_predict1]],
-    [8, ["cls", "Error rate", "std", True, 8, get_model1, get_score1, get_predict1]],
+    [8, ["cls", "Error rate", "std", False, 8, get_model1, get_score1, get_predict1]],
 
     # 10/13, more Y
-    [9, ["reg", "MSE", "mean", True, 6, get_model2, get_score2, get_predict2]],
-    [10, ["reg", "MSE", "mean", True, 8, get_model2, get_score2, get_predict2]],
+    [9, ["reg", "MSE", "mean", False, 6, get_model2, get_score2, get_predict2]],
+    [10, ["reg", "MSE", "mean", False, 8, get_model2, get_score2, get_predict2]],
     [11, ["reg", "MSE", "std", True, 8, get_model2, get_score2, get_predict2]],
     [12, ["reg", "MSE", "std", True, 6, get_model2, get_score2, get_predict2]],
-    [13, ["reg", "MSE", "mean", True, 8, get_model2, get_score2, get_predict2]],
+    [13, ["reg", "MSE", "mean", False, 8, get_model2, get_score2, get_predict2]],
 ]
 
 
