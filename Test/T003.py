@@ -11,10 +11,10 @@ import numpy as np
 import pandas as pd
 
 
-def get_data(cid, data_type, _cal="mean"):
+def get_data(cid, data_type, _cal="mean", _get_edge_attr=False):
     _data = torch.load(f"{datp}/{cid}/{data_type}.pt")
     _lx, _ly = _data[0].x.shape[1], _data[0].y.shape[1]
-    _ledge_attr = _data[0].edge_attr.shape[1] if "edge_attr" in _data[0].keys else 0
+    _ledge_attr = _data[0].edge_attr.shape[1] if _get_edge_attr else 0
     _xcols = [f"x{i}" for i in range(_lx)]
 
     xdata, ydata, index_data, edge_attr_data = [], [], [], []
@@ -80,17 +80,17 @@ ids = [
     [1, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
     [2, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
     [3, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
-    # [4, ["cls", "Error rate", "max", 4, get_model1, get_score1, get_predict1]],
-    # [5, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
-    # [6, ["cls", "Error rate", "min", 6, get_model1, get_score1, get_predict1]],
-    # [7, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
-    # [8, ["cls", "Error rate", "std", 8, get_model1, get_score1, get_predict1]],
+    [4, ["cls", "Error rate", "max", 4, get_model1, get_score1, get_predict1]],
+    [5, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
+    [6, ["cls", "Error rate", "min", 6, get_model1, get_score1, get_predict1]],
+    [7, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
+    [8, ["cls", "Error rate", "std", 8, get_model1, get_score1, get_predict1]],
     #
     [9, ["reg", "MSE", "mean", 6, get_model2, get_score2, get_predict2]],
-    # [10, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
-    # [11, ["reg", "MSE", "std", 8, get_model2, get_score2, get_predict2]],
+    [10, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    [11, ["reg", "MSE", "std", 8, get_model2, get_score2, get_predict2]],
     [12, ["reg", "MSE", "std", 6, get_model2, get_score2, get_predict2]],
-    # [13, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    [13, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
 ]
 
 
