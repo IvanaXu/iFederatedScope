@@ -70,20 +70,20 @@ def get_predict2(x, mL):
 
 # cid, task_type, metric, cal, K, model, score, predict
 ids = [
-    # [1, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
-    # [2, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
-    # [3, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
-    # [4, ["cls", "Error rate", "max", 4, get_model1, get_score1, get_predict1]],
-    # [5, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
-    [6, ["cls", "Error rate", "std", 8, get_model1, get_score1, get_predict1]],
-    # [7, ["cls", "Error rate", "mean", 8, get_model1, get_score1, get_predict1]],
-    # [8, ["cls", "Error rate", "mean", 8, get_model1, get_score1, get_predict1]],
-    #
-    # [9, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
-    # [10, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
-    # [11, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
-    # [12, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
-    # [13, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    [1, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
+    [2, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
+    [3, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
+    [4, ["cls", "Error rate", "max", 4, get_model1, get_score1, get_predict1]],
+    [5, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
+    [6, ["cls", "Error rate", "min", 6, get_model1, get_score1, get_predict1]],
+    [7, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
+    [8, ["cls", "Error rate", "std", 8, get_model1, get_score1, get_predict1]],
+
+    [9, ["reg", "MSE", "mean", 6, get_model2, get_score2, get_predict2]],
+    [10, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    [11, ["reg", "MSE", "std", 8, get_model2, get_score2, get_predict2]],
+    [12, ["reg", "MSE", "std", 6, get_model2, get_score2, get_predict2]],
+    [13, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
 ]
 
 
