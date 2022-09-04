@@ -11,14 +11,22 @@ import numpy as np
 import pandas as pd
 
 
-def get_data(cid, data_type):
+def get_data(cid, data_type, _cal="mean"):
     _data = torch.load(f"{datp}/{cid}/{data_type}.pt")
     _lx, _ly = _data[0].x.shape[1], _data[0].y.shape[1]
     _xcols = [f"x{i}" for i in range(_lx)]
 
     xdata, ydata, index_data = [], [], []
     for idata in _data:
-        xdata.append(np.mean(np.array(idata.x), axis=0))
+        if _cal == "max":
+            xdata.append(np.max(np.array(idata.x), axis=0))
+        if _cal == "mean":
+            xdata.append(np.mean(np.array(idata.x), axis=0))
+        if _cal == "min":
+            xdata.append(np.min(np.array(idata.x), axis=0))
+        if _cal == "std":
+            xdata.append(np.std(np.array(idata.x), axis=0))
+
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
 
@@ -60,33 +68,33 @@ def get_predict2(x, mL):
     ], axis=0)]
 
 
-# cid, task_type, metric, model, score, predict
-ids = {
-    1: ["cls", "Error rate", get_model1, get_score1, get_predict1],
-    2: ["cls", "Error rate", get_model1, get_score1, get_predict1],
-    3: ["cls", "Error rate", get_model1, get_score1, get_predict1],
-    4: ["cls", "Error rate", get_model1, get_score1, get_predict1],
-    5: ["cls", "Error rate", get_model1, get_score1, get_predict1],
-    6: ["cls", "Error rate", get_model1, get_score1, get_predict1],
-    7: ["cls", "Error rate", get_model1, get_score1, get_predict1],
-    8: ["cls", "Error rate", get_model1, get_score1, get_predict1],
-
-    9: ["reg", "MSE", get_model2, get_score2, get_predict2],
-    10: ["reg", "MSE", get_model2, get_score2, get_predict2],
-    11: ["reg", "MSE", get_model2, get_score2, get_predict2],
-    12: ["reg", "MSE", get_model2, get_score2, get_predict2],
-    13: ["reg", "MSE", get_model2, get_score2, get_predict2],
-}
+# cid, task_type, metric, cal, K, model, score, predict
+ids = [
+    # [1, ["cls", "Error rate", "mean", 10, get_model1, get_score1, get_predict1]],
+    # [2, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
+    # [3, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
+    # [4, ["cls", "Error rate", "max", 4, get_model1, get_score1, get_predict1]],
+    # [5, ["cls", "Error rate", "max", 8, get_model1, get_score1, get_predict1]],
+    [6, ["cls", "Error rate", "std", 8, get_model1, get_score1, get_predict1]],
+    # [7, ["cls", "Error rate", "mean", 8, get_model1, get_score1, get_predict1]],
+    # [8, ["cls", "Error rate", "mean", 8, get_model1, get_score1, get_predict1]],
+    #
+    # [9, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    # [10, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    # [11, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    # [12, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+    # [13, ["reg", "MSE", "mean", 8, get_model2, get_score2, get_predict2]],
+]
 
 
 result = []
-for cid, paras in tqdm(ids.items()):
+for [cid, paras] in tqdm(ids):
     print(f"\nID {cid}:")
-    [task_type, metric, model, score, predict] = paras
+    [task_type, metric, cal, K, model, score, predict] = paras
 
-    train_data, xcols, ly = get_data(cid, "train")
-    valis_data, _1, _2 = get_data(cid, "val")
-    tests_data, _3, _4 = get_data(cid, "test")
+    train_data, xcols, ly = get_data(cid, "train", cal)
+    valis_data, _1, _2 = get_data(cid, "val", cal)
+    tests_data, _3, _4 = get_data(cid, "test", cal)
 
     i_result = pd.DataFrame([cid for i in tests_data["data_index"]], columns=["client_id"])
     i_result["sample_id"] = tests_data["data_index"]
@@ -94,12 +102,13 @@ for cid, paras in tqdm(ids.items()):
     print("\n")
     for iy in range(ly):
         train_X, train_Y = train_data[xcols], train_data["y"].apply(lambda x: x[iy])
+        print(pd.value_counts(train_Y), train_X.shape, "\n")
         valis_X, valis_Y = valis_data[xcols], valis_data["y"].apply(lambda x: x[iy])
         tests_X = tests_data[xcols]
 
         modelL = []
         from sklearn.model_selection import KFold
-        kf = KFold(n_splits=8, shuffle=True, random_state=930721)
+        kf = KFold(n_splits=K, shuffle=True, random_state=930721)
         for k, (i_train, i_tests) in enumerate(kf.split(train_X)):
             train_dataX1 = train_X.loc[i_train]
             train_dataX2 = train_X.loc[i_tests]
@@ -120,7 +129,7 @@ for cid, paras in tqdm(ids.items()):
 
 result = pd.concat(result)
 result.to_csv(f"{datp}/result0.csv", index=False, header=False)
-print(result)
+print(result.head(), result.shape)
 
 with open(f"{datp}/result1.csv", "w") as f1:
     with open(f"{datp}/result0.csv", "r") as f0:
