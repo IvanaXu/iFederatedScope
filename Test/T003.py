@@ -1,4 +1,4 @@
-# Test submission
+# Test submission, score:1.0444
 import sys
 if len(sys.argv) > 1:
     datp = "/root/proj/data/CIKM22Competition/"
