@@ -124,11 +124,11 @@ ids = [
     [8, ["cls", "Error rate", 14, get_model1, get_score1, get_predict1]],
 
     # 10/13, more Y
-    [9, ["reg", "MSE", 5, get_model2, get_score2, get_predict2]],
-    [10, ["reg", "MSE", 6, get_model2, get_score2, get_predict2]],
+    [9, ["reg", "MSE", 6, get_model2, get_score2, get_predict2]],
+    [10, ["reg", "MSE", 8, get_model2, get_score2, get_predict2]],
     [11, ["reg", "MSE", 14, get_model2, get_score2, get_predict2]],
     [12, ["reg", "MSE", 14, get_model2, get_score2, get_predict2]],
-    [13, ["reg", "MSE", 10, get_model2, get_score2, get_predict2]],
+    [13, ["reg", "MSE", 8, get_model2, get_score2, get_predict2]],
 ]
 
 
