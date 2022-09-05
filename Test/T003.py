@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 
-def get_data(cid, data_type, _cal="mean", is_edge_attr=False):
+def get_data(cid, data_type, _cal1="mean", _cal2="mean", is_edge_attr=False):
     _data = torch.load(f"{datp}/{cid}/{data_type}.pt")
     _lx, _ly = _data[0].x.shape[1], _data[0].y.shape[1]
     _ledge_attr = _data[0].edge_attr.shape[1] if is_edge_attr else 0
@@ -19,19 +19,26 @@ def get_data(cid, data_type, _cal="mean", is_edge_attr=False):
 
     xdata, ydata, index_data, edge_attr_data = [], [], [], []
     for idata in _data:
-        if _cal == "max":
+        if _cal1 == "max":
             xdata.append(np.max(np.array(idata.x), axis=0))
-        if _cal == "mean":
+        if _cal1 == "mean":
             xdata.append(np.mean(np.array(idata.x), axis=0))
-        if _cal == "min":
+        if _cal1 == "min":
             xdata.append(np.min(np.array(idata.x), axis=0))
-        if _cal == "std":
+        if _cal1 == "std":
             xdata.append(np.std(np.array(idata.x), axis=0))
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
         if _ledge_attr > 0:
-            edge_attr_data.append(np.mean(np.array(idata.edge_attr), axis=0))
+            if _cal2 == "max":
+                edge_attr_data.append(np.max(np.array(idata.edge_attr), axis=0))
+            if _cal2 == "mean":
+                edge_attr_data.append(np.mean(np.array(idata.edge_attr), axis=0))
+            if _cal2 == "min":
+                edge_attr_data.append(np.min(np.array(idata.edge_attr), axis=0))
+            if _cal2 == "std":
+                edge_attr_data.append(np.std(np.array(idata.edge_attr), axis=0))
 
     _data = pd.DataFrame(xdata, columns=_xcols)
     _data["y"] = ydata
@@ -75,36 +82,36 @@ def get_predict2(x, mL):
     ], axis=0)]
 
 
-# cid, task_type, metric, cal, is_edge_attr, K, model, score, predict
+# cid, task_type, metric, cal1, cal2, is_edge_attr, K, model, score, predict
 ids = [
-    [1, ["cls", "Error rate", "mean", True, 10, get_model1, get_score1, get_predict1]],
-    [2, ["cls", "Error rate", "max", False, 8, get_model1, get_score1, get_predict1]],
+    [1, ["cls", "Error rate", "mean", "mean", True, 10, get_model1, get_score1, get_predict1]],
+    [2, ["cls", "Error rate", "max", "mean", False, 8, get_model1, get_score1, get_predict1]],
     # 3, no edge_attr, set False
-    [3, ["cls", "Error rate", "max", False, 8, get_model1, get_score1, get_predict1]],
-    [4, ["cls", "Error rate", "max", True, 4, get_model1, get_score1, get_predict1]],
-    [5, ["cls", "Error rate", "max", False, 8, get_model1, get_score1, get_predict1]],
-    [6, ["cls", "Error rate", "min", False, 6, get_model1, get_score1, get_predict1]],
+    [3, ["cls", "Error rate", "max", "no", False, 8, get_model1, get_score1, get_predict1]],
+    [4, ["cls", "Error rate", "max", "mean", True, 4, get_model1, get_score1, get_predict1]],
+    [5, ["cls", "Error rate", "max", "mean", False, 8, get_model1, get_score1, get_predict1]],
+    [6, ["cls", "Error rate", "min", "mean", False, 6, get_model1, get_score1, get_predict1]],
     # 7, no edge_attr, set False
-    [7, ["cls", "Error rate", "mean", False, 10, get_model1, get_score1, get_predict1]],
-    [8, ["cls", "Error rate", "std", False, 8, get_model1, get_score1, get_predict1]],
+    [7, ["cls", "Error rate", "mean", "no", False, 10, get_model1, get_score1, get_predict1]],
+    [8, ["cls", "Error rate", "std", "mean", False, 8, get_model1, get_score1, get_predict1]],
 
     # 10/13, more Y
-    [9, ["reg", "MSE", "mean", False, 6, get_model2, get_score2, get_predict2]],
-    [10, ["reg", "MSE", "mean", False, 8, get_model2, get_score2, get_predict2]],
-    [11, ["reg", "MSE", "std", True, 8, get_model2, get_score2, get_predict2]],
-    [12, ["reg", "MSE", "std", True, 6, get_model2, get_score2, get_predict2]],
-    [13, ["reg", "MSE", "mean", False, 8, get_model2, get_score2, get_predict2]],
+    [9, ["reg", "MSE", "mean", "mean", False, 6, get_model2, get_score2, get_predict2]],
+    [10, ["reg", "MSE", "mean", "mean", False, 8, get_model2, get_score2, get_predict2]],
+    [11, ["reg", "MSE", "std", "mean", True, 8, get_model2, get_score2, get_predict2]],
+    [12, ["reg", "MSE", "std", "mean", True, 6, get_model2, get_score2, get_predict2]],
+    [13, ["reg", "MSE", "mean", "mean", False, 8, get_model2, get_score2, get_predict2]],
 ]
 
 
 result = []
 for [cid, paras] in tqdm(ids):
     print(f"\nID {cid}:")
-    [task_type, metric, cal, is_edge_attr, K, model, score, predict] = paras
+    [task_type, metric, cal1, cal2, is_edge_attr, K, model, score, predict] = paras
 
-    train_data, xcols, ly = get_data(cid, "train", cal, is_edge_attr)
-    valis_data, _1, _2 = get_data(cid, "val", cal, is_edge_attr)
-    tests_data, _3, _4 = get_data(cid, "test", cal, is_edge_attr)
+    train_data, xcols, ly = get_data(cid, "train", cal1, cal2, is_edge_attr)
+    valis_data, _1, _2 = get_data(cid, "val", cal1, cal2, is_edge_attr)
+    tests_data, _3, _4 = get_data(cid, "test", cal1, cal2, is_edge_attr)
 
     i_result = pd.DataFrame([cid for i in tests_data["data_index"]], columns=["client_id"])
     i_result["sample_id"] = tests_data["data_index"]
