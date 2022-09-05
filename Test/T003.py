@@ -89,16 +89,18 @@ ids = [
     # 3, no edge_attr, set False
     [3, ["cls", "Error rate", "max", "no", False, 8, get_model1, get_score1, get_predict1]],
     [4, ["cls", "Error rate", "max", "mean", True, 4, get_model1, get_score1, get_predict1]],
-    [5, ["cls", "Error rate", "max", "mean", False, 8, get_model1, get_score1, get_predict1]],
-    [6, ["cls", "Error rate", "min", "mean", False, 6, get_model1, get_score1, get_predict1]],
+    [5, ["cls", "Error rate", "max", "min", True, 8, get_model1, get_score1, get_predict1]],
+    [6, ["cls", "Error rate", "min", "max", True, 6, get_model1, get_score1, get_predict1]],
+
     # 7, no edge_attr, set False
     [7, ["cls", "Error rate", "mean", "no", False, 10, get_model1, get_score1, get_predict1]],
     [8, ["cls", "Error rate", "std", "mean", False, 8, get_model1, get_score1, get_predict1]],
 
+
     # 10/13, more Y
     [9, ["reg", "MSE", "mean", "mean", False, 6, get_model2, get_score2, get_predict2]],
     [10, ["reg", "MSE", "mean", "mean", False, 8, get_model2, get_score2, get_predict2]],
-    [11, ["reg", "MSE", "std", "mean", True, 8, get_model2, get_score2, get_predict2]],
+    [11, ["reg", "MSE", "std", "max", True, 8, get_model2, get_score2, get_predict2]],
     [12, ["reg", "MSE", "std", "mean", True, 6, get_model2, get_score2, get_predict2]],
     [13, ["reg", "MSE", "mean", "mean", False, 8, get_model2, get_score2, get_predict2]],
 ]
