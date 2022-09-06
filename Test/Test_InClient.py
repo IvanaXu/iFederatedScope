@@ -79,8 +79,16 @@ def get_data(cid, data_type):
 
 
 def get_model1():
-    from sklearn.tree import DecisionTreeClassifier
-    return DecisionTreeClassifier(random_state=10086, max_depth=16)
+    import lightgbm as lgb
+    return lgb.LGBMClassifier(
+        objective="regression",
+        bagging_fraction=0.80,
+        feature_fraction=0.80,
+        max_depth=10,
+        n_estimators=100,
+        verbose=-1,
+        n_jobs=-1,
+    )
 
 
 def get_score1(_yt, _yp):
@@ -95,8 +103,16 @@ def get_predict1(x, mL):
 
 
 def get_model2():
-    from sklearn.tree import DecisionTreeRegressor
-    return DecisionTreeRegressor(random_state=10086, max_depth=24)
+    import lightgbm as lgb
+    return lgb.LGBMRegressor(
+        objective="regression",
+        bagging_fraction=0.80,
+        feature_fraction=0.80,
+        max_depth=10,
+        n_estimators=100,
+        verbose=-1,
+        n_jobs=-1,
+    )
 
 
 def get_score2(_yt, _yp):
