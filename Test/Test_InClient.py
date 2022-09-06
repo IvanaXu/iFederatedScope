@@ -96,7 +96,7 @@ def get_predict1(x, mL):
 
 def get_model2():
     from sklearn.tree import DecisionTreeRegressor
-    return DecisionTreeRegressor(random_state=10086, max_depth=20)
+    return DecisionTreeRegressor(random_state=10086, max_depth=10)
 
 
 def get_score2(_yt, _yp):
