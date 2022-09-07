@@ -140,7 +140,7 @@ ids = [
     [9, ["reg", "MSE", 6, get_model2, get_score2, get_predict2]],
     [10, ["reg", "MSE", 4, get_model2, get_score2, get_predict2]],
     [11, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
-    [12, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
+    [12, ["reg", "MSE", 10, get_model2, get_score2, get_predict2]],# 2/10
     [13, ["reg", "MSE", 7, get_model2, get_score2, get_predict2]],
 ]
 # For Test
