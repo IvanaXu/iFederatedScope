@@ -4,9 +4,11 @@
 # @goal Test In Client, No FL.
 
 import time
+
 time0 = time.time()
 
 import sys
+
 if len(sys.argv) > 1:
     datp = "/root/proj/data/CIKM22Competition/"
 else:
@@ -18,6 +20,7 @@ import pandas as pd
 from tqdm import tqdm
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 
@@ -128,25 +131,40 @@ def get_predict2(x, mL):
 
 # cid, task_type, metric, K, model, score, predict
 ids = [
-    [1, ["cls", "Error rate", 10, get_model1, get_score1, get_predict1]],
+    [1, ["cls", "Error rate", 4, get_model1, get_score1, get_predict1]],
     [2, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
     # 3, no edge_attr
     [3, ["cls", "Error rate", 4, get_model1, get_score1, get_predict1]],
-    [4, ["cls", "Error rate", 7, get_model1, get_score1, get_predict1]],
-    [5, ["cls", "Error rate", 6, get_model1, get_score1, get_predict1]],
-    [6, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
+    [4, ["cls", "Error rate", 3, get_model1, get_score1, get_predict1]],
+    [5, ["cls", "Error rate", 11, get_model1, get_score1, get_predict1]],
+    [6, ["cls", "Error rate", 7, get_model1, get_score1, get_predict1]],
     # 7, no edge_attr
-    [7, ["cls", "Error rate", 10, get_model1, get_score1, get_predict1]],
-    [8, ["cls", "Error rate", 14, get_model1, get_score1, get_predict1]],
+    [7, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
+    [8, ["cls", "Error rate", 9, get_model1, get_score1, get_predict1]],
 
     # 10/13, more Y
     [9, ["reg", "MSE", 6, get_model2, get_score2, get_predict2]],
-    [10, ["reg", "MSE", 8, get_model2, get_score2, get_predict2]],
-    [11, ["reg", "MSE", 14, get_model2, get_score2, get_predict2]],
-    [12, ["reg", "MSE", 14, get_model2, get_score2, get_predict2]],
-    [13, ["reg", "MSE", 8, get_model2, get_score2, get_predict2]],
+    [10, ["reg", "MSE", 4, get_model2, get_score2, get_predict2]],
+    [11, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
+    [12, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
+    [13, ["reg", "MSE", 7, get_model2, get_score2, get_predict2]],
 ]
-
+# For Test
+_ids = [
+    # [1, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+    # [2, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+    # [3, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+    # [4, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+    # [5, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+    # [6, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+    # [7, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+    # [8, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+    # [9, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+    # [10, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+    # [11, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+    # [12, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+    # [13, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+]
 
 result = []
 for [cid, paras] in ids:
@@ -169,6 +187,7 @@ for [cid, paras] in ids:
 
         modelL = []
         from sklearn.model_selection import KFold
+
         kf = KFold(n_splits=K, shuffle=True, random_state=930721)
         for k, (i_train, i_tests) in enumerate(kf.split(train_X)):
             train_dataX1 = train_X.loc[i_train]
@@ -189,8 +208,13 @@ for [cid, paras] in ids:
         valis_scoreL.append(valis_score)
 
     if True:
-        print(f""">>> {cid} Y-AVG /{K} Train {metric}: {np.mean(train_scoreL):.6f}""")
-        print(f""">>> {cid} Y-AVG /{K} Valis {metric}: {np.mean(valis_scoreL):.6f}""")
+        train_score, valis_score = np.mean(train_scoreL), np.mean(valis_scoreL)
+        print(
+            f""">>> {cid} Y-AVG /{K} {metric}"""
+            f""" Train: {train_score:.6f}"""
+            f""" Valis: {valis_score:.6f}"""
+            f""" STD: {np.std([train_score, valis_score]):.6f}"""
+        )
     result.append(i_result)
 
 result = pd.concat(result)
@@ -203,4 +227,4 @@ with open(f"{datp}/result1.csv", "w") as f1:
             i = i.strip("\n")
             i = ",".join([j[0] if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
             f1.write(f"{i}\n")
-print(f"USE {time.time()-time0:.6f}")
+print(f"USE {time.time() - time0:.6f}")
