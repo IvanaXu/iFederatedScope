@@ -24,12 +24,14 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-def get_data(cid, data_type):
+def get_data(cid, data_type, top=0):
     _data = torch.load(f"{datp}/{cid}/{data_type}.pt")
     _lx, _ly = _data[0].x.shape[1], _data[0].y.shape[1]
     _ledge_attr = _data[0].edge_attr.shape[1] if "edge_attr" in _data[0].keys else 0
 
+    #
     ydata, index_data, lxdata, ledata = [], [], [], []
+    ei0data, ei1data = [], []
     xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
     edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
     for idata in _data:
@@ -49,6 +51,11 @@ def get_data(cid, data_type):
             e5data.append(np.percentile(np.array(idata.edge_attr), q=25, axis=0))
             e6data.append(np.percentile(np.array(idata.edge_attr), q=50, axis=0))
             e7data.append(np.percentile(np.array(idata.edge_attr), q=75, axis=0))
+
+        ei0 = list(np.array(idata.edge_index)[0])
+        ei0data.append([1 if i0 in ei0 else 0 for i0 in range(top+1)])
+        ei1 = list(np.array(idata.edge_index)[1])
+        ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -71,6 +78,11 @@ def get_data(cid, data_type):
         for n, edata in enumerate(edatal):
             _data[f"e_{n}_{i}"] = np.array(edata)[:, i]
             _xcols.append(f"e_{n}_{i}")
+
+    for i in range(top+1):
+        for n, eidata in enumerate([ei0data, ei1data]):
+            _data[f"ei_{n}_{i}"] = np.array(eidata)[:, i]
+            _xcols.append(f"ei_{n}_{i}")
 
     return _data, _xcols, _ly
 
@@ -106,7 +118,7 @@ def get_model2():
         bagging_fraction=0.80,
         feature_fraction=0.80,
         max_depth=10,
-        n_estimators=200,
+        n_estimators=100,
         verbose=-1,
         n_jobs=-1,
     )
@@ -123,55 +135,57 @@ def get_predict2(x, mL):
     ], axis=0)]
 
 
-# cid, task_type, metric, K, model, score, predict
+# cid, task_type, metric, top, K, model, score, predict
 TEST = False
 if TEST:
     # For Test
     ids = [
-        # [1, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
-        # [2, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
-        # [3, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
-        # [4, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
-        # [5, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
-        # [6, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
-        # [7, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
-        # [8, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
-        # [9, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
-        # [10, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
-        # [11, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
-        # [12, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
-        # [13, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [1, ["cls", "Error rate", 111, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [2, ["cls", "Error rate", 29, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [3, ["cls", "Error rate", 105, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [4, ["cls", "Error rate", 22, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [5, ["cls", "Error rate", 29, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [6, ["cls", "Error rate", 99, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [7, ["cls", "Error rate", 91, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [8, ["cls", "Error rate", 63, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [9, ["reg", "MSE", 36, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [10, ["reg", "MSE", 11, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [11, ["reg", "MSE", 48, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [12, ["reg", "MSE", 34, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [13, ["reg", "MSE", 28, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+
+        # [4, ["cls", "Error rate", 22, 3, get_model1, get_score1, get_predict1]]
     ]
 else:
     ids = [
-        [1, ["cls", "Error rate", 4, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
+        [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 29, 2, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
-        [3, ["cls", "Error rate", 4, get_model1, get_score1, get_predict1]],
-        [4, ["cls", "Error rate", 3, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 11, get_model1, get_score1, get_predict1]],
-        [6, ["cls", "Error rate", 7, get_model1, get_score1, get_predict1]],
+        [3, ["cls", "Error rate", 105, 4, get_model1, get_score1, get_predict1]],
+        [4, ["cls", "Error rate", 22, 3, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 29, 11, get_model1, get_score1, get_predict1]],
+        [6, ["cls", "Error rate", 99, 7, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
-        [7, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 9, get_model1, get_score1, get_predict1]],
+        [7, ["cls", "Error rate", 91, 2, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 63, 9, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
-        [9, ["reg", "MSE", 6, get_model2, get_score2, get_predict2]],
-        [10, ["reg", "MSE", 4, get_model2, get_score2, get_predict2]],
-        [11, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
-        [12, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
-        [13, ["reg", "MSE", 7, get_model2, get_score2, get_predict2]],
+        [9, ["reg", "MSE", 36, 6, get_model2, get_score2, get_predict2]],
+        [10, ["reg", "MSE", 11, 4, get_model2, get_score2, get_predict2]],
+        [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
+        [12, ["reg", "MSE", 34, 2, get_model2, get_score2, get_predict2]],
+        [13, ["reg", "MSE", 28, 7, get_model2, get_score2, get_predict2]],
     ]
 
 
 result, record = [], []
 for [cid, paras] in ids:
     print(f"\nID {cid}:")
-    [task_type, metric, K, model, score, predict] = paras
+    [task_type, metric, top, K, model, score, predict] = paras
 
-    train_data, xcols, ly = get_data(cid, "train")
-    valis_data, _1, _2 = get_data(cid, "val")
-    tests_data, _3, _4 = get_data(cid, "test")
+    train_data, xcols, ly = get_data(cid, "train", top)
+    valis_data, _1, _2 = get_data(cid, "val", top)
+    tests_data, _3, _4 = get_data(cid, "test", top)
 
     i_result = pd.DataFrame([cid for i in tests_data["data_index"]], columns=["client_id"])
     i_result["sample_id"] = tests_data["data_index"]
