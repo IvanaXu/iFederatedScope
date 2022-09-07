@@ -57,9 +57,9 @@ def get_data(cid, data_type):
     _data = pd.DataFrame([])
     _data["y"] = ydata
     _data["data_index"] = index_data
-    # _data["e_l"] = ledata
+    _data["e_l"] = ledata
 
-    _xcols = []
+    _xcols = ["e_l"]
     for i in range(_lx):
         for n, xdata in enumerate(xdatal):
             _data[f"x_{n}_{i}"] = np.array(xdata)[:, i]
