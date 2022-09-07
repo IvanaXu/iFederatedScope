@@ -29,7 +29,7 @@ def get_data(cid, data_type):
     _lx, _ly = _data[0].x.shape[1], _data[0].y.shape[1]
     _ledge_attr = _data[0].edge_attr.shape[1] if "edge_attr" in _data[0].keys else 0
 
-    ydata, index_data, ledata = [], [], []
+    ydata, index_data, lxdata, ledata = [], [], [], []
     xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
     edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
     for idata in _data:
@@ -52,14 +52,16 @@ def get_data(cid, data_type):
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
+        lxdata.append(idata.x.shape[0])
         ledata.append(idata.edge_index.shape[1])
 
     _data = pd.DataFrame([])
     _data["y"] = ydata
     _data["data_index"] = index_data
+    _data["e_x"] = lxdata
     _data["e_l"] = ledata
 
-    _xcols = ["e_l"]
+    _xcols = ["e_x", "e_l"]
     for i in range(_lx):
         for n, xdata in enumerate(xdatal):
             _data[f"x_{n}_{i}"] = np.array(xdata)[:, i]
@@ -158,7 +160,7 @@ _ids = [
     # [13, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
 ]
 
-result = []
+result, record = [], []
 for [cid, paras] in ids:
     print(f"\nID {cid}:")
     [task_type, metric, K, model, score, predict] = paras
@@ -201,12 +203,14 @@ for [cid, paras] in ids:
 
     if True:
         train_score, valis_score = np.mean(train_scoreL), np.mean(valis_scoreL)
+        std_train_valis = np.std([train_score, valis_score])
         print(
             f""">>> {cid} Y-AVG /{K} {metric}"""
             f""" Train: {train_score:.6f}"""
             f""" Valis: {valis_score:.6f}"""
-            f""" STD: {np.std([train_score, valis_score]):.6f}"""
+            f""" STD: {std_train_valis:.6f}"""
         )
+    record.extend([train_score, valis_score])
     result.append(i_result)
 
 result = pd.concat(result)
@@ -219,5 +223,8 @@ with open(f"{datp}/result1.csv", "w") as f1:
             i = i.strip("\n")
             i = ",".join([j[0] if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
             f1.write(f"{i}\n")
-print(f"USE {time.time() - time0:.6f}")
 
+for i in record:
+    print(f"{i:.6f}")
+
+print(f"\nUSE {time.time() - time0:.6f}s")
