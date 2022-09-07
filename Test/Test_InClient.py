@@ -221,7 +221,8 @@ with open(f"{datp}/result1.csv", "w") as f1:
     with open(f"{datp}/result0.csv", "r") as f0:
         for i in f0:
             i = i.strip("\n")
-            i = ",".join([j[0] if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
+            # when 0.0,1.0 always in 0 for Test/ j[0]
+            i = ",".join(["0" if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
             f1.write(f"{i}\n")
 
 for i in record:
