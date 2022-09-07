@@ -29,54 +29,46 @@ def get_data(cid, data_type):
     _lx, _ly = _data[0].x.shape[1], _data[0].y.shape[1]
     _ledge_attr = _data[0].edge_attr.shape[1] if "edge_attr" in _data[0].keys else 0
 
-    ydata, index_data = [], []
-    x1data, x2data, x3data, x4data = [], [], [], []
-    e1data, e2data, e3data, e4data = [], [], [], []
+    ydata, index_data, ledata = [], [], []
+    xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
+    edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
     for idata in _data:
         x1data.append(np.max(np.array(idata.x), axis=0))
         x2data.append(np.mean(np.array(idata.x), axis=0))
         x3data.append(np.min(np.array(idata.x), axis=0))
         x4data.append(np.std(np.array(idata.x), axis=0))
+        x5data.append(np.percentile(np.array(idata.x), q=25, axis=0))
+        x6data.append(np.percentile(np.array(idata.x), q=50, axis=0))
+        x7data.append(np.percentile(np.array(idata.x), q=75, axis=0))
 
         if _ledge_attr > 0:
             e1data.append(np.max(np.array(idata.edge_attr), axis=0))
             e2data.append(np.mean(np.array(idata.edge_attr), axis=0))
             e3data.append(np.min(np.array(idata.edge_attr), axis=0))
             e4data.append(np.std(np.array(idata.edge_attr), axis=0))
+            e5data.append(np.percentile(np.array(idata.edge_attr), q=25, axis=0))
+            e6data.append(np.percentile(np.array(idata.edge_attr), q=50, axis=0))
+            e7data.append(np.percentile(np.array(idata.edge_attr), q=75, axis=0))
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
+        ledata.append(idata.edge_index.shape[1])
 
     _data = pd.DataFrame([])
     _data["y"] = ydata
     _data["data_index"] = index_data
+    # _data["e_l"] = ledata
 
     _xcols = []
     for i in range(_lx):
-        _data[f"x_1_{i}"] = np.array(x1data)[:, i]
-        _xcols.append(f"x_1_{i}")
-
-        _data[f"x_2_{i}"] = np.array(x2data)[:, i]
-        _xcols.append(f"x_2_{i}")
-
-        _data[f"x_3_{i}"] = np.array(x3data)[:, i]
-        _xcols.append(f"x_3_{i}")
-
-        _data[f"x_4_{i}"] = np.array(x4data)[:, i]
-        _xcols.append(f"x_4_{i}")
+        for n, xdata in enumerate(xdatal):
+            _data[f"x_{n}_{i}"] = np.array(xdata)[:, i]
+            _xcols.append(f"x_{n}_{i}")
 
     for i in range(_ledge_attr):
-        _data[f"edge_attr_1_{i}"] = np.array(e1data)[:, i]
-        _xcols.append(f"edge_attr_1_{i}")
-
-        _data[f"edge_attr_2_{i}"] = np.array(e2data)[:, i]
-        _xcols.append(f"edge_attr_2_{i}")
-
-        _data[f"edge_attr_3_{i}"] = np.array(e3data)[:, i]
-        _xcols.append(f"edge_attr_3_{i}")
-
-        _data[f"edge_attr_4_{i}"] = np.array(e4data)[:, i]
-        _xcols.append(f"edge_attr_4_{i}")
+        for n, edata in enumerate(edatal):
+            _data[f"e_{n}_{i}"] = np.array(edata)[:, i]
+            _xcols.append(f"e_{n}_{i}")
 
     return _data, _xcols, _ly
 
@@ -85,8 +77,8 @@ def get_model1():
     import lightgbm as lgb
     return lgb.LGBMClassifier(
         objective="regression",
-        # bagging_fraction=0.80,
-        # feature_fraction=0.80,
+        bagging_fraction=0.80,
+        feature_fraction=0.80,
         max_depth=10,
         n_estimators=100,
         verbose=-1,
@@ -109,8 +101,8 @@ def get_model2():
     import lightgbm as lgb
     return lgb.LGBMRegressor(
         objective="regression",
-        # bagging_fraction=0.80,
-        # feature_fraction=0.80,
+        bagging_fraction=0.80,
+        feature_fraction=0.80,
         max_depth=10,
         n_estimators=100,
         verbose=-1,
@@ -228,3 +220,4 @@ with open(f"{datp}/result1.csv", "w") as f1:
             i = ",".join([j[0] if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
             f1.write(f"{i}\n")
 print(f"USE {time.time() - time0:.6f}")
+
