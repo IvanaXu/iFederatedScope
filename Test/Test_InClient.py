@@ -85,8 +85,8 @@ def get_model1():
     import lightgbm as lgb
     return lgb.LGBMClassifier(
         objective="regression",
-        bagging_fraction=0.80,
-        feature_fraction=0.80,
+        # bagging_fraction=0.80,
+        # feature_fraction=0.80,
         max_depth=10,
         n_estimators=100,
         verbose=-1,
@@ -109,8 +109,8 @@ def get_model2():
     import lightgbm as lgb
     return lgb.LGBMRegressor(
         objective="regression",
-        bagging_fraction=0.80,
-        feature_fraction=0.80,
+        # bagging_fraction=0.80,
+        # feature_fraction=0.80,
         max_depth=10,
         n_estimators=100,
         verbose=-1,
