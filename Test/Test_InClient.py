@@ -52,7 +52,7 @@ def get_data(cid, data_type, top=0):
             e7data.append(np.percentile(np.array(idata.edge_attr), q=75, axis=0))
 
         ei0 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
-        ei0data.append([1 if i0 in ei0 else 0 for i0 in range(top+1)])
+        ei0data.append([ei0.count(i0) for i0 in range(top+1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
