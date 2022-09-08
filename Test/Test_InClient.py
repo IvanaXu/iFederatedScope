@@ -30,7 +30,7 @@ def get_data(cid, data_type, top=0):
 
     #
     ydata, index_data, lxdata, ledata = [], [], [], []
-    ei0data, ei1data = [], []
+    ei0data, ei1data, ei2data = [], [], []
     xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
     edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
     for idata in _data:
@@ -55,6 +55,8 @@ def get_data(cid, data_type, top=0):
         ei0data.append([1 if i0 in ei0 else 0 for i0 in range(top+1)])
         ei1 = list(np.array(idata.edge_index)[1])
         ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
+        ei2 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
+        ei2data.append([1 if i2 in ei2 else 0 for i2 in range(top+1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -79,7 +81,7 @@ def get_data(cid, data_type, top=0):
             _xcols.append(f"e_{n}_{i}")
 
     for i in range(top+1):
-        for n, eidata in enumerate([ei0data, ei1data]):
+        for n, eidata in enumerate([ei0data, ei1data, ei2data]):
             _data[f"ei_{n}_{i}"] = np.array(eidata)[:, i]
             _xcols.append(f"ei_{n}_{i}")
 
