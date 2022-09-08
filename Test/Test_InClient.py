@@ -51,8 +51,10 @@ def get_data(cid, data_type, top=0):
             e6data.append(np.percentile(np.array(idata.edge_attr), q=50, axis=0))
             e7data.append(np.percentile(np.array(idata.edge_attr), q=75, axis=0))
 
-        ei0 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
+        ei0 = list(np.array(idata.edge_index)[0])
         ei0data.append([ei0.count(i0) for i0 in range(top+1)])
+        ei1 = list(np.array(idata.edge_index)[1])
+        ei1data.append([ei1.count(i1) for i1 in range(top + 1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -77,7 +79,7 @@ def get_data(cid, data_type, top=0):
             _xcols.append(f"e_{n}_{i}")
 
     for i in range(top+1):
-        for n, eidata in enumerate([ei0data]):
+        for n, eidata in enumerate([ei0data, ei1data]):
             _data[f"ei_{n}_{i}"] = np.array(eidata)[:, i]
             _xcols.append(f"ei_{n}_{i}")
 
