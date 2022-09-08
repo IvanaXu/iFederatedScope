@@ -12,7 +12,7 @@ import sys
 if len(sys.argv) > 1:
     datp = "/root/proj/data/CIKM22Competition/"
 else:
-    datp = "/Users/ivan/Library/CloudStorage/OneDrive-个人/Code/CIKM2022/data/CIKM22Competition/"
+    datp = "/Users/ivan/Desktop/Data/CIKM2022/CIKM22Competition/"
 
 import torch
 import numpy as np
@@ -20,7 +20,6 @@ import pandas as pd
 from tqdm import tqdm
 
 import warnings
-
 warnings.filterwarnings("ignore")
 
 
@@ -134,6 +133,7 @@ def get_predict2(x, mL):
 
 
 # cid, task_type, metric, top, K, model, score, predict
+# TEST = True
 TEST = False
 if TEST:
     # For Test
@@ -150,48 +150,31 @@ if TEST:
         # [10, ["reg", "MSE", 11, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
         # [11, ["reg", "MSE", 48, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
         # [12, ["reg", "MSE", 34, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
-        # [13, ["reg", "MSE", 28, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
-
-        # [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
-        # [2, ["cls", "Error rate", 29, 2, get_model1, get_score1, get_predict1]],
-        # # 3, no edge_attr
-        # [3, ["cls", "Error rate", 105, 4, get_model1, get_score1, get_predict1]],
-        # [4, ["cls", "Error rate", 22, 3, get_model1, get_score1, get_predict1]],
-        # [5, ["cls", "Error rate", 29, 11, get_model1, get_score1, get_predict1]],
-        # [6, ["cls", "Error rate", 99, 7, get_model1, get_score1, get_predict1]],
-        # # 7, no edge_attr
-        # [7, ["cls", "Error rate", 91, 2, get_model1, get_score1, get_predict1]],
-        # [8, ["cls", "Error rate", 63, 9, get_model1, get_score1, get_predict1]],
-        #
-        # # 10/13, more Y
-        # [9, ["reg", "MSE", 36, 6, get_model2, get_score2, get_predict2]],
-        # [10, ["reg", "MSE", 11, 4, get_model2, get_score2, get_predict2]],
-        # [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
-        # [12, ["reg", "MSE", 34, 2, get_model2, get_score2, get_predict2]],
-        # [13, ["reg", "MSE", 28, 7, get_model2, get_score2, get_predict2]],
+        [13, ["reg", "MSE", 28, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
     ]
 else:
     ids = [
         [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 29, 2, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
-        [3, ["cls", "Error rate", 105, 4, get_model1, get_score1, get_predict1]],
-        [4, ["cls", "Error rate", 22, 3, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 29, 11, get_model1, get_score1, get_predict1]],
-        [6, ["cls", "Error rate", 99, 7, get_model1, get_score1, get_predict1]],
+        [3, ["cls", "Error rate", 105, 5, get_model1, get_score1, get_predict1]],
+        [4, ["cls", "Error rate", 22, 2, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 29, 5, get_model1, get_score1, get_predict1]],
+        [6, ["cls", "Error rate", 99, 2, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
         [7, ["cls", "Error rate", 91, 2, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 63, 9, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 63, 11, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
-        [9, ["reg", "MSE", 36, 6, get_model2, get_score2, get_predict2]],
+        [9, ["reg", "MSE", 36, 20, get_model2, get_score2, get_predict2]],
         [10, ["reg", "MSE", 11, 4, get_model2, get_score2, get_predict2]],
         [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
         [12, ["reg", "MSE", 34, 2, get_model2, get_score2, get_predict2]],
-        [13, ["reg", "MSE", 28, 7, get_model2, get_score2, get_predict2]],
+        [13, ["reg", "MSE", 28, 2, get_model2, get_score2, get_predict2]],
     ]
 
 
+min_train_valis = np.inf
 result, record = [], []
 for [cid, paras] in ids:
     print(f"\nID {cid}:")
@@ -241,7 +224,11 @@ for [cid, paras] in ids:
             f""" Train: {train_score:.6f}"""
             f""" Valis: {valis_score:.6f}"""
             f""" STD: {std_train_valis:.6f}"""
+            f""" {"✅" if TEST and min_train_valis > std_train_valis else ""}"""
         )
+        if min_train_valis > std_train_valis:
+            min_train_valis = std_train_valis
+
     record.extend([train_score, valis_score])
     result.append(i_result)
 
