@@ -54,7 +54,7 @@ def get_data(cid, data_type, top=0):
         ei0 = list(np.array(idata.edge_index)[0])
         ei0data.append([ei0.count(i0) for i0 in range(top+1)])
         ei1 = list(np.array(idata.edge_index)[1])
-        ei1data.append([ei1.count(i1) for i1 in range(top + 1)])
+        ei1data.append([ei1.count(i1) for i1 in range(top+1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -152,20 +152,22 @@ if TEST:
         # [10, ["reg", "MSE", 11, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
         # [11, ["reg", "MSE", 48, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
         # [12, ["reg", "MSE", 34, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
-        [13, ["reg", "MSE", 28, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [13, ["reg", "MSE", 28, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+
+        # [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]]
     ]
 else:
     ids = [
-        [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
+        [1, ["cls", "Error rate", 111, 13, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 29, 15, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
-        [3, ["cls", "Error rate", 105, 5, get_model1, get_score1, get_predict1]],
-        [4, ["cls", "Error rate", 22, 2, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 29, 5, get_model1, get_score1, get_predict1]],
-        [6, ["cls", "Error rate", 99, 2, get_model1, get_score1, get_predict1]],
+        [3, ["cls", "Error rate", 105, 3, get_model1, get_score1, get_predict1]],
+        [4, ["cls", "Error rate", 22, 3, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 29, 6, get_model1, get_score1, get_predict1]],
+        [6, ["cls", "Error rate", 99, 8, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
-        [7, ["cls", "Error rate", 91, 2, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 63, 11, get_model1, get_score1, get_predict1]],
+        [7, ["cls", "Error rate", 91, 15, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 63, 20, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
         [9, ["reg", "MSE", 36, 20, get_model2, get_score2, get_predict2]],
@@ -243,10 +245,11 @@ with open(f"{datp}/result1.csv", "w") as f1:
         for i in f0:
             i = i.strip("\n")
             # when 0.0,1.0 always in 0 for Test/ j[0]
-            i = ",".join([("0" if TEST else j[0]) if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
+            i = ",".join([j[0] if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
             f1.write(f"{i}\n")
 
-for i in record:
-    print(f"{i:.6f}")
+with open(".record", "w") as f:
+    for i in record:
+        f.write(f"{i:.6f}\n")
 
 print(f"\nUSE {time.time() - time0:.6f}s")
