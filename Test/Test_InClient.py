@@ -3,8 +3,8 @@
 # @auth Ivan
 # @goal Test In Client, No FL.
 
+import os
 import time
-
 time0 = time.time()
 
 import sys
@@ -160,23 +160,23 @@ if TEST:
     ]
 else:
     ids = [
-        [1, ["cls", "Error rate", 111, 3, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 29, 3, get_model1, get_score1, get_predict1]],
+        [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
         [3, ["cls", "Error rate", 105, 3, get_model1, get_score1, get_predict1]],
-        [4, ["cls", "Error rate", 22, 3, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 29, 3, get_model1, get_score1, get_predict1]],
-        [6, ["cls", "Error rate", 99, 3, get_model1, get_score1, get_predict1]],
+        [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 29, 2, get_model1, get_score1, get_predict1]],
+        [6, ["cls", "Error rate", 99, 2, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
         [7, ["cls", "Error rate", 91, 3, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 63, 3, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 63, 18, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
-        [9, ["reg", "MSE", 36, 3, get_model2, get_score2, get_predict2]],
+        [9, ["reg", "MSE", 36, 2, get_model2, get_score2, get_predict2]],
         [10, ["reg", "MSE", 11, 3, get_model2, get_score2, get_predict2]],
-        [11, ["reg", "MSE", 48, 3, get_model2, get_score2, get_predict2]],
-        [12, ["reg", "MSE", 34, 3, get_model2, get_score2, get_predict2]],
-        [13, ["reg", "MSE", 28, 3, get_model2, get_score2, get_predict2]],
+        [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
+        [12, ["reg", "MSE", 34, 2, get_model2, get_score2, get_predict2]],
+        [13, ["reg", "MSE", 28, 2, get_model2, get_score2, get_predict2]],
     ]
 
 
@@ -255,3 +255,4 @@ with open(".record", "w") as f:
         f.write(f"{i:.6f}\n")
 
 print(f"\nUSE {time.time() - time0:.6f}s")
+os.system('say "i finish the job"')
