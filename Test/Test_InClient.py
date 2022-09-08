@@ -52,9 +52,9 @@ def get_data(cid, data_type, top=0):
             e7data.append(np.percentile(np.array(idata.edge_attr), q=75, axis=0))
 
         ei0 = list(np.array(idata.edge_index)[0])
-        ei0data.append([ei0.count(i0) for i0 in range(top+1)])
+        ei0data.append([1 if i0 in ei0 else 0 for i0 in range(top+1)])
         ei1 = list(np.array(idata.edge_index)[1])
-        ei1data.append([ei1.count(i1) for i1 in range(top+1)])
+        ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -158,23 +158,23 @@ if TEST:
     ]
 else:
     ids = [
-        [1, ["cls", "Error rate", 111, 13, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 29, 15, get_model1, get_score1, get_predict1]],
+        [1, ["cls", "Error rate", 111, 3, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 29, 3, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
         [3, ["cls", "Error rate", 105, 3, get_model1, get_score1, get_predict1]],
         [4, ["cls", "Error rate", 22, 3, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 29, 6, get_model1, get_score1, get_predict1]],
-        [6, ["cls", "Error rate", 99, 8, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 29, 3, get_model1, get_score1, get_predict1]],
+        [6, ["cls", "Error rate", 99, 3, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
-        [7, ["cls", "Error rate", 91, 15, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 63, 20, get_model1, get_score1, get_predict1]],
+        [7, ["cls", "Error rate", 91, 3, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 63, 3, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
-        [9, ["reg", "MSE", 36, 20, get_model2, get_score2, get_predict2]],
-        [10, ["reg", "MSE", 11, 4, get_model2, get_score2, get_predict2]],
-        [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
-        [12, ["reg", "MSE", 34, 2, get_model2, get_score2, get_predict2]],
-        [13, ["reg", "MSE", 28, 2, get_model2, get_score2, get_predict2]],
+        [9, ["reg", "MSE", 36, 3, get_model2, get_score2, get_predict2]],
+        [10, ["reg", "MSE", 11, 3, get_model2, get_score2, get_predict2]],
+        [11, ["reg", "MSE", 48, 3, get_model2, get_score2, get_predict2]],
+        [12, ["reg", "MSE", 34, 3, get_model2, get_score2, get_predict2]],
+        [13, ["reg", "MSE", 28, 3, get_model2, get_score2, get_predict2]],
     ]
 
 
