@@ -103,8 +103,8 @@ def get_model1():
         objective="regression",
         bagging_fraction=0.80,
         feature_fraction=0.80,
-        max_depth=10,
-        n_estimators=400,
+        max_depth=8,
+        n_estimators=100,
         verbose=-1,
         n_jobs=-1,
     )
@@ -127,8 +127,8 @@ def get_model2():
         objective="regression",
         bagging_fraction=0.80,
         feature_fraction=0.80,
-        max_depth=10,
-        n_estimators=400,
+        max_depth=8,
+        n_estimators=100,
         verbose=-1,
         n_jobs=-1,
     )
