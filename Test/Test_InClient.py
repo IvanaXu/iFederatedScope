@@ -30,9 +30,15 @@ def get_data(cid, data_type, top=0):
 
     #
     ydata, index_data, lxdata, ledata = [], [], [], []
-    ei0data, ei1data, ei2data = [], [], []
+    ei0data, ei1data, ei2data, ei3data = [], [], [], []
     xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
     edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
+
+    import gzip
+    import pickle
+    with gzip.GzipFile(f"{datp}/11.mdl", "rb") as f:
+        mtfidf = pickle.load(f)
+
     for idata in _data:
         x1data.append(np.max(np.array(idata.x), axis=0))
         x2data.append(np.mean(np.array(idata.x), axis=0))
@@ -57,6 +63,8 @@ def get_data(cid, data_type, top=0):
         ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
         ei2 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
         ei2data.append([1 if i2 in ei2 else 0 for i2 in range(top+1)])
+        ei3 = np.array(mtfidf.transform([" ".join([str(i) for i in np.array(idata.edge_index[1]) if i in range(top+1)])]).todense())[0]
+        ei3data.append([ei3[i3] if i3 < ei3.shape[0] else 0 for i3 in range(top+1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -81,7 +89,7 @@ def get_data(cid, data_type, top=0):
             _xcols.append(f"e_{n}_{i}")
 
     for i in range(top+1):
-        for n, eidata in enumerate([ei0data, ei1data, ei2data]):
+        for n, eidata in enumerate([ei0data, ei1data, ei2data, ei3data]):
             _data[f"ei_{n}_{i}"] = np.array(eidata)[:, i]
             _xcols.append(f"ei_{n}_{i}")
 
@@ -137,8 +145,8 @@ def get_predict2(x, mL):
 
 
 # cid, task_type, metric, top, K, model, score, predict
-# TEST = True
-TEST = False
+TEST = True
+# TEST = False
 if TEST:
     # For Test
     ids = [
@@ -156,7 +164,9 @@ if TEST:
         # [12, ["reg", "MSE", 34, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
         # [13, ["reg", "MSE", 28, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
 
-        # [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]]
+        # [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
+        # [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
+        [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
     ]
 else:
     ids = [
@@ -255,4 +265,4 @@ with open(".record", "w") as f:
         f.write(f"{i:.6f}\n")
 
 print(f"\nUSE {time.time() - time0:.6f}s")
-os.system('say "i finish the job"')
+# os.system('say "i finish the job"')
