@@ -30,7 +30,7 @@ def get_data(cid, data_type, top=0):
 
     #
     ydata, index_data, lxdata, ledata = [], [], [], []
-    ei0data, ei1data, ei2data, ei3data, ei4data = [], [], [], [], []
+    ei0data, ei1data, ei2data, ei3data = [], [], [], []
     xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
     edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
 
@@ -59,14 +59,13 @@ def get_data(cid, data_type, top=0):
 
         ei0 = list(np.array(idata.edge_index)[0])
         ei0data.append([1 if i0 in ei0 else 0 for i0 in range(top+1)])
-        # ei1 = list(np.array(idata.edge_index)[1])
-        # ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
-        # ei2 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
-        # ei2data.append([1 if i2 in ei2 else 0 for i2 in range(top+1)])
+        ei1 = list(np.array(idata.edge_index)[1])
+        ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
+        ei2 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
+        ei2data.append([1 if i2 in ei2 else 0 for i2 in range(top+1)])
+
         ei3 = list(np.array(idata.edge_index)[1])
         ei3data.append([ei3.count(i3) for i3 in range(top+1)])
-        ei4 = list(np.array(idata.edge_index)[1])[:10]
-        ei4data.append([ei4.count(i4) for i4 in range(top + 1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -91,7 +90,7 @@ def get_data(cid, data_type, top=0):
             _xcols.append(f"e_{n}_{i}")
 
     for i in range(top+1):
-        for n, eidata in enumerate([ei0data, ei3data, ei4data]):
+        for n, eidata in enumerate([ei0data, ei1data, ei2data]):
             _data[f"ei_{n}_{i}"] = np.array(eidata)[:, i]
             _xcols.append(f"ei_{n}_{i}")
 
@@ -105,7 +104,7 @@ def get_model1():
         bagging_fraction=0.80,
         feature_fraction=0.80,
         max_depth=9,
-        n_estimators=100,
+        n_estimators=200,
         verbose=-1,
         n_jobs=-1,
     )
@@ -129,7 +128,7 @@ def get_model2():
         bagging_fraction=0.80,
         feature_fraction=0.80,
         max_depth=9,
-        n_estimators=100,
+        n_estimators=200,
         verbose=-1,
         n_jobs=-1,
     )
@@ -152,19 +151,19 @@ TEST = False
 if TEST:
     # For Test
     ids = [
-        # [1, ["cls", "Error rate", 111, k, get_model1, get_score1, get_predict1]] for k in range(2, 11)
-        # [2, ["cls", "Error rate", 29, k, get_model1, get_score1, get_predict1]] for k in range(2, 11)
-        # [3, ["cls", "Error rate", 105, k, get_model1, get_score1, get_predict1]] for k in range(2, 11)
-        # [4, ["cls", "Error rate", 22, k, get_model1, get_score1, get_predict1]] for k in range(2, 11)
-        # [5, ["cls", "Error rate", 29, k, get_model1, get_score1, get_predict1]] for k in range(2, 11)
-        # [6, ["cls", "Error rate", 99, k, get_model1, get_score1, get_predict1]] for k in range(2, 11)
-        # [7, ["cls", "Error rate", 91, k, get_model1, get_score1, get_predict1]] for k in range(2, 11)
-        # [8, ["cls", "Error rate", 63, k, get_model1, get_score1, get_predict1]] for k in range(2, 11)
-        # [9, ["reg", "MSE", 36, k, get_model2, get_score2, get_predict2]] for k in range(2, 11)
-        # [10, ["reg", "MSE", 11, k, get_model2, get_score2, get_predict2]] for k in range(2, 11)
-        # [11, ["reg", "MSE", 48, k, get_model2, get_score2, get_predict2]] for k in range(2, 11)
-        # [12, ["reg", "MSE", 34, k, get_model2, get_score2, get_predict2]] for k in range(2, 11)
-        # [13, ["reg", "MSE", 28, k, get_model2, get_score2, get_predict2]] for k in range(2, 11)
+        # [1, ["cls", "Error rate", 111, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [2, ["cls", "Error rate", 29, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [3, ["cls", "Error rate", 105, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [4, ["cls", "Error rate", 22, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [5, ["cls", "Error rate", 29, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [6, ["cls", "Error rate", 99, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [7, ["cls", "Error rate", 91, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [8, ["cls", "Error rate", 63, k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [9, ["reg", "MSE", 36, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [10, ["reg", "MSE", 11, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [11, ["reg", "MSE", 48, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [12, ["reg", "MSE", 34, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [13, ["reg", "MSE", 28, k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
 
         # [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
         # [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
@@ -172,16 +171,16 @@ if TEST:
     ]
 else:
     ids = [
-        [1, ["cls", "Error rate", 111, 6, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 29, 10, get_model1, get_score1, get_predict1]],
+        [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
-        [3, ["cls", "Error rate", 105, 10, get_model1, get_score1, get_predict1]],
+        [3, ["cls", "Error rate", 105, 3, get_model1, get_score1, get_predict1]],
         [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 29, 2, get_model1, get_score1, get_predict1]],
         [6, ["cls", "Error rate", 99, 2, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
         [7, ["cls", "Error rate", 91, 3, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 63, 10, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 63, 18, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
         [9, ["reg", "MSE", 36, 2, get_model2, get_score2, get_predict2]],
