@@ -90,7 +90,7 @@ def get_data(cid, data_type, top=0):
             _xcols.append(f"e_{n}_{i}")
 
     for i in range(top+1):
-        for n, eidata in enumerate([ei0data, ei1data, ei2data, ei3data]):
+        for n, eidata in enumerate([ei0data, ei1data, ei2data]):
             _data[f"ei_{n}_{i}"] = np.array(eidata)[:, i]
             _xcols.append(f"ei_{n}_{i}")
 
@@ -104,7 +104,7 @@ def get_model1():
         bagging_fraction=0.80,
         feature_fraction=0.80,
         max_depth=10,
-        n_estimators=100,
+        n_estimators=400,
         verbose=-1,
         n_jobs=-1,
     )
@@ -128,7 +128,7 @@ def get_model2():
         bagging_fraction=0.80,
         feature_fraction=0.80,
         max_depth=10,
-        n_estimators=100,
+        n_estimators=400,
         verbose=-1,
         n_jobs=-1,
     )
