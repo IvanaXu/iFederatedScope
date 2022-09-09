@@ -63,8 +63,9 @@ def get_data(cid, data_type, top=0):
         ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
         ei2 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
         ei2data.append([1 if i2 in ei2 else 0 for i2 in range(top+1)])
-        ei3 = np.array(mtfidf.transform([" ".join([str(i) for i in np.array(idata.edge_index[1]) if i in range(top+1)])]).todense())[0]
-        ei3data.append([ei3[i3] if i3 < ei3.shape[0] else 0 for i3 in range(top+1)])
+
+        ei3 = list(np.array(idata.edge_index)[1])
+        ei3data.append([ei3.count(i3) for i3 in range(top+1)])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -145,8 +146,8 @@ def get_predict2(x, mL):
 
 
 # cid, task_type, metric, top, K, model, score, predict
-TEST = True
-# TEST = False
+# TEST = True
+TEST = False
 if TEST:
     # For Test
     ids = [
@@ -166,7 +167,7 @@ if TEST:
 
         # [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
         # [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
-        [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
+        # [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
     ]
 else:
     ids = [
@@ -265,4 +266,4 @@ with open(".record", "w") as f:
         f.write(f"{i:.6f}\n")
 
 print(f"\nUSE {time.time() - time0:.6f}s")
-# os.system('say "i finish the job"')
+os.system('say "i finish the job"')
