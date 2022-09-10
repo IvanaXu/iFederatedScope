@@ -102,6 +102,7 @@ def get_model1():
         n_estimators=100,
         verbose=-1,
         n_jobs=-1,
+        # learning_rate
     )
 
 
@@ -126,6 +127,7 @@ def get_model2():
         n_estimators=100,
         verbose=-1,
         n_jobs=-1,
+        # learning_rate
     )
 
 
