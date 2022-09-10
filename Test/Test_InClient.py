@@ -34,11 +34,6 @@ def get_data(cid, data_type, top=0):
     xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
     edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
 
-    import gzip
-    import pickle
-    with gzip.GzipFile(f"{datp}/11.mdl", "rb") as f:
-        mtfidf = pickle.load(f)
-
     for idata in _data:
         x1data.append(np.max(np.array(idata.x), axis=0))
         x2data.append(np.mean(np.array(idata.x), axis=0))
@@ -63,6 +58,7 @@ def get_data(cid, data_type, top=0):
         ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
         ei2 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
         ei2data.append([1 if i2 in ei2 else 0 for i2 in range(top+1)])
+
         ei3 = list(np.array(idata.edge_index)[1])
         ei3data.append([ei3.count(i3) for i3 in range(top+1)])
 
@@ -89,7 +85,7 @@ def get_data(cid, data_type, top=0):
             _xcols.append(f"e_{n}_{i}")
 
     for i in range(top+1):
-        for n, eidata in enumerate([ei0data, ei1data, ei2data, ei3data]):
+        for n, eidata in enumerate([ei0data, ei1data, ei2data]):
             _data[f"ei_{n}_{i}"] = np.array(eidata)[:, i]
             _xcols.append(f"ei_{n}_{i}")
 
@@ -100,8 +96,8 @@ def get_model1():
     import lightgbm as lgb
     return lgb.LGBMClassifier(
         objective="regression",
-        bagging_fraction=0.80,
-        feature_fraction=0.80,
+        bagging_fraction=0.85,
+        feature_fraction=0.85,
         max_depth=9,
         n_estimators=100,
         verbose=-1,
@@ -124,8 +120,8 @@ def get_model2():
     import lightgbm as lgb
     return lgb.LGBMRegressor(
         objective="regression",
-        bagging_fraction=0.80,
-        feature_fraction=0.80,
+        bagging_fraction=0.85,
+        feature_fraction=0.85,
         max_depth=9,
         n_estimators=100,
         verbose=-1,
