@@ -96,13 +96,13 @@ def get_model1():
     import lightgbm as lgb
     return lgb.LGBMClassifier(
         objective="regression",
-        bagging_fraction=0.85,
-        feature_fraction=0.85,
+        bagging_fraction=0.80,
+        feature_fraction=0.80,
         max_depth=9,
         n_estimators=100,
         verbose=-1,
         n_jobs=-1,
-        # learning_rate
+        learning_rate=0.05,
     )
 
 
@@ -121,13 +121,13 @@ def get_model2():
     import lightgbm as lgb
     return lgb.LGBMRegressor(
         objective="regression",
-        bagging_fraction=0.85,
-        feature_fraction=0.85,
+        bagging_fraction=0.80,
+        feature_fraction=0.80,
         max_depth=9,
         n_estimators=100,
         verbose=-1,
         n_jobs=-1,
-        # learning_rate
+        learning_rate=0.05,
     )
 
 
