@@ -95,14 +95,14 @@ def get_data(cid, data_type, top=0):
 def get_model1():
     import lightgbm as lgb
     return lgb.LGBMClassifier(
-        objective="regression",
+        # objective="regression",
         bagging_fraction=0.80,
         feature_fraction=0.80,
         max_depth=9,
-        n_estimators=600,
+        n_estimators=100,
         verbose=-1,
         n_jobs=-1,
-        learning_rate=0.01,
+        # learning_rate=0.01,
     )
 
 
@@ -120,14 +120,14 @@ def get_predict1(x, mL):
 def get_model2():
     import lightgbm as lgb
     return lgb.LGBMRegressor(
-        objective="regression",
+        # objective="regression",
         bagging_fraction=0.80,
         feature_fraction=0.80,
         max_depth=9,
-        n_estimators=600,
+        n_estimators=100,
         verbose=-1,
         n_jobs=-1,
-        learning_rate=0.01,
+        # learning_rate=0.01,
     )
 
 
@@ -167,24 +167,43 @@ if TEST:
         # [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
     ]
 else:
+    _t_ = 8
     ids = [
-        [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
+        # [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
+        # [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
+        # # 3, no edge_attr
+        # [3, ["cls", "Error rate", 105, 3, get_model1, get_score1, get_predict1]],
+        # [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
+        # [5, ["cls", "Error rate", 29, 2, get_model1, get_score1, get_predict1]],
+        # [6, ["cls", "Error rate", 99, 2, get_model1, get_score1, get_predict1]],
+        # # 7, no edge_attr
+        # [7, ["cls", "Error rate", 91, 3, get_model1, get_score1, get_predict1]],
+        # [8, ["cls", "Error rate", 63, 18, get_model1, get_score1, get_predict1]],
+        #
+        # # 10/13, more Y
+        # [9, ["reg", "MSE", 36, 2, get_model2, get_score2, get_predict2]],
+        # [10, ["reg", "MSE", 11, 3, get_model2, get_score2, get_predict2]],
+        # [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
+        # [12, ["reg", "MSE", 34, 2, get_model2, get_score2, get_predict2]],
+        # [13, ["reg", "MSE", 28, 2, get_model2, get_score2, get_predict2]],
+
+        [1, ["cls", "Error rate", 111, _t_, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 29, _t_, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
-        [3, ["cls", "Error rate", 105, 3, get_model1, get_score1, get_predict1]],
-        [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 29, 2, get_model1, get_score1, get_predict1]],
-        [6, ["cls", "Error rate", 99, 2, get_model1, get_score1, get_predict1]],
+        [3, ["cls", "Error rate", 105, _t_, get_model1, get_score1, get_predict1]],
+        [4, ["cls", "Error rate", 22, _t_, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 29, _t_, get_model1, get_score1, get_predict1]],
+        [6, ["cls", "Error rate", 99, _t_, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
-        [7, ["cls", "Error rate", 91, 3, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 63, 18, get_model1, get_score1, get_predict1]],
+        [7, ["cls", "Error rate", 91, _t_, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 63, _t_, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
-        [9, ["reg", "MSE", 36, 2, get_model2, get_score2, get_predict2]],
-        [10, ["reg", "MSE", 11, 3, get_model2, get_score2, get_predict2]],
-        [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
-        [12, ["reg", "MSE", 34, 2, get_model2, get_score2, get_predict2]],
-        [13, ["reg", "MSE", 28, 2, get_model2, get_score2, get_predict2]],
+        [9, ["reg", "MSE", 36, _t_, get_model2, get_score2, get_predict2]],
+        [10, ["reg", "MSE", 11, _t_, get_model2, get_score2, get_predict2]],
+        [11, ["reg", "MSE", 48, _t_, get_model2, get_score2, get_predict2]],
+        [12, ["reg", "MSE", 34, _t_, get_model2, get_score2, get_predict2]],
+        [13, ["reg", "MSE", 28, _t_, get_model2, get_score2, get_predict2]],
     ]
 
 
