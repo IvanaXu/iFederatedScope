@@ -10,13 +10,13 @@ datp = "/Users/ivan/Desktop/Data/CIKM2022/CIKM22Competition/"
 pklp = f"{datp}/X"
 clientp = f"{datp}/Client"
 
-TEST = True
-# TEST = False
+# TEST = True
+TEST = False
 
 # # cid, task_type, metric, K, model, score, predict
 if TEST:
     ids = [
-        [1, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        # [1, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
         # [2, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
         # [3, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
         # [4, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
