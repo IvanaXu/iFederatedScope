@@ -22,17 +22,6 @@ from tqdm import tqdm
 import warnings
 warnings.filterwarnings("ignore")
 
-ej0l = [
-    '29-1', '36-2', '2-1', '6-1',
-    '11-12', '4-7', '2-1', '0-1',
-    '3-3', '9-3', '5-1', '0-1',
-    '16-1', '15-1', '4-1', '0-1',
-    '14-13', '11-15', '0-1', '4-1',
-    '4-2', '2-31', '1-1', '0-1',
-    '0-2', '9-2', '4-1', '5-1',
-    '3-11', '0-3', '3-1', '4-1',
-]
-
 
 def get_data(cid, data_type, top=0):
     _data = torch.load(f"{datp}/{cid}/{data_type}.pt")
@@ -42,7 +31,6 @@ def get_data(cid, data_type, top=0):
     #
     ydata, index_data, lxdata, ledata = [], [], [], []
     ei0data, ei1data, ei2data, ei3data = [], [], [], []
-    ej0data = []
     xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
     edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
 
@@ -70,11 +58,9 @@ def get_data(cid, data_type, top=0):
         ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
         ei2 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
         ei2data.append([1 if i2 in ei2 else 0 for i2 in range(top+1)])
+
         ei3 = list(np.array(idata.edge_index)[1])
         ei3data.append([ei3.count(i3) for i3 in range(top+1)])
-
-        ej0 = str(list(np.array(idata.edge_index[1])))
-        ej0data.append([1 if j0 in ej0 else 0 for j0 in ej0l])
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -83,11 +69,12 @@ def get_data(cid, data_type, top=0):
 
     _data = pd.DataFrame([])
     _data["y"] = ydata
+    _data["y_l"] = [len(i) for i in ydata]
     _data["data_index"] = index_data
     _data["e_x"] = lxdata
     _data["e_l"] = ledata
 
-    _xcols = ["e_x", "e_l"]
+    _xcols = ["e_x", "e_l", "y_l"]
     for i in range(_lx):
         for n, xdata in enumerate(xdatal):
             _data[f"x_{n}_{i}"] = np.array(xdata)[:, i]
@@ -99,13 +86,9 @@ def get_data(cid, data_type, top=0):
             _xcols.append(f"e_{n}_{i}")
 
     for i in range(top+1):
-        for n, eidata in enumerate([ei0data, ei1data, ei2data, ei3data]):
+        for n, eidata in enumerate([ei0data, ei1data, ei2data]):
             _data[f"ei_{n}_{i}"] = np.array(eidata)[:, i]
             _xcols.append(f"ei_{n}_{i}")
-
-    for n, _ in enumerate(ej0l):
-        _data[f"ej_{n}"] = np.array(ej0data)[:, n]
-        _xcols.append(f"ej_{n}")
 
     return _data, _xcols, _ly
 
@@ -159,8 +142,8 @@ def get_predict2(x, mL):
 
 
 # cid, task_type, metric, top, K, model, score, predict
-# TEST = True
-TEST = False
+TEST = True
+# TEST = False
 if TEST:
     # For Test
     ids = [
@@ -181,23 +164,25 @@ if TEST:
         # [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
         # [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
         # [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
+        [10, ["reg", "MSE", 11, 3, get_model2, get_score2, get_predict2]],
+        [13, ["reg", "MSE", 28, 2, get_model2, get_score2, get_predict2]],
     ]
 else:
     ids = [
-        [1, ["cls", "Error rate", 111, 6, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 29, 10, get_model1, get_score1, get_predict1]],
+        [1, ["cls", "Error rate", 111, 4, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 29, 9, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
-        [3, ["cls", "Error rate", 105, 7, get_model1, get_score1, get_predict1]],
-        [4, ["cls", "Error rate", 22, 3, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 29, 10, get_model1, get_score1, get_predict1]],
+        [3, ["cls", "Error rate", 105, 3, get_model1, get_score1, get_predict1]],
+        [4, ["cls", "Error rate", 22, 4, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 29, 2, get_model1, get_score1, get_predict1]],
         [6, ["cls", "Error rate", 99, 2, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
-        [7, ["cls", "Error rate", 91, 15, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 63, 13, get_model1, get_score1, get_predict1]],
+        [7, ["cls", "Error rate", 91, 3, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 63, 18, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
         [9, ["reg", "MSE", 36, 2, get_model2, get_score2, get_predict2]],
-        [10, ["reg", "MSE", 11, 2, get_model2, get_score2, get_predict2]],
+        [10, ["reg", "MSE", 11, 3, get_model2, get_score2, get_predict2]],
         [11, ["reg", "MSE", 48, 2, get_model2, get_score2, get_predict2]],
         [12, ["reg", "MSE", 34, 2, get_model2, get_score2, get_predict2]],
         [13, ["reg", "MSE", 28, 2, get_model2, get_score2, get_predict2]],
