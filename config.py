@@ -25,7 +25,7 @@ COLS = ["e_x", "e_l", "y_l"] + \
        [f"em_{i}" for i in range(NLP_c)]
 
 
-def get_data(path1, path2, cid, data_type, top=0):
+def get_data(path1, path2, cid, data_type, top=0, is_NLP=""):
     _data = torch.load(f"{path1}/{cid}/{data_type}.pt")
     _lx, _ly = _data[0].x.shape[1], _data[0].y.shape[1]
     _ledge_attr = _data[0].edge_attr.shape[1] if "edge_attr" in _data[0].keys else 0
@@ -100,7 +100,7 @@ def get_data(path1, path2, cid, data_type, top=0):
             _xcols.append(f"cid_y_{i1}-{j}")
 
     for i in range(NLP_c):
-        _data[f"em_{i}"] = np.array(ej0data)[:, i]
+        _data[f"em_{i}"] = np.array(ej0data)[:, i] if is_NLP else -1
         _xcols.append(f"em_{i}")
 
     # COLS
@@ -114,12 +114,12 @@ def get_data(path1, path2, cid, data_type, top=0):
     return _data
 
 
-def get_model1():
+def get_model1(cid):
     import lightgbm as lgb
     return lgb.LGBMClassifier(
         objective="regression",
-        bagging_fraction=0.50,
-        feature_fraction=0.50,
+        bagging_fraction=0.50 if cid in [2, 4] else 0.90,
+        feature_fraction=0.50 if cid in [2, 4] else 0.90,
         max_depth=10,
         n_estimators=100,
         verbose=-1,
@@ -138,12 +138,12 @@ def get_predict1(x, mL):
     ], axis=0)]
 
 
-def get_model2():
+def get_model2(cid):
     import lightgbm as lgb
     return lgb.LGBMRegressor(
         objective="regression",
-        bagging_fraction=0.50,
-        feature_fraction=0.50,
+        bagging_fraction=0.50 if cid in [2, 4] else 0.90,
+        feature_fraction=0.50 if cid in [2, 4] else 0.90,
         max_depth=10,
         n_estimators=100,
         verbose=-1,

@@ -35,24 +35,25 @@ else:
         [1, ["cls", "Error rate", 13, get_model1, get_score1, get_predict1]],
         [2, ["cls", "Error rate", 8, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
-        [3, ["cls", "Error rate", 13, get_model1, get_score1, get_predict1]],
+        [3, ["cls", "Error rate", 3, get_model1, get_score1, get_predict1]],
         [4, ["cls", "Error rate", 5, get_model1, get_score1, get_predict1]],
-        [5, ["cls", "Error rate", 6, get_model1, get_score1, get_predict1]],
-        [6, ["cls", "Error rate", 5, get_model1, get_score1, get_predict1]],
+        [5, ["cls", "Error rate", 11, get_model1, get_score1, get_predict1]],
+        [6, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
-        [7, ["cls", "Error rate", 5, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 16, get_model1, get_score1, get_predict1]],
+        [7, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 11, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
-        [9, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
+        [9, ["reg", "MSE", 3, get_model2, get_score2, get_predict2]],
         [10, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
-        [11, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
-        [12, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
+        [11, ["reg", "MSE", 3, get_model2, get_score2, get_predict2]],
+        [12, ["reg", "MSE", 4, get_model2, get_score2, get_predict2]],
         [13, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
     ]
 
 
-min_train_valis, record = np.inf, []
+min_train_valis = np.inf
+result, record = [], []
 for [cid, paras] in ids:
     print(f"\nID {cid}:")
     [task_type, metric, K, model, score, predict] = paras
@@ -83,7 +84,7 @@ for [cid, paras] in ids:
             train_dataY1 = train_Y.loc[i_train]
             train_dataY2 = train_Y.loc[i_tests]
 
-            i_model = model()
+            i_model = model(cid)
             i_model.fit(train_dataX1, train_dataY1)
             modelL.append(i_model)
 
@@ -111,9 +112,21 @@ for [cid, paras] in ids:
         pickle.dump(modelD, f)
 
     record.extend([train_score, valis_score])
+    result.append(i_result)
 
 with open(".record", "w") as f:
     for i in record:
         f.write(f"{i:.6f}\n")
+
+result = pd.concat(result)
+result.to_csv(f"{datp}/Result/result-b0.csv", index=False, header=False)
+print(result.head(), result.shape)
+
+with open(f"{datp}/Result/result-b1.csv", "w") as f1:
+    with open(f"{datp}/Result/result-b0.csv", "r") as f0:
+        for i in f0:
+            i = i.strip("\n")
+            i = ",".join([j[0] if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
+            f1.write(f"{i}\n")
 
 os.system('say "i finish the job"')

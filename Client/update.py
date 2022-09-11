@@ -10,13 +10,13 @@ datp = "/Users/ivan/Desktop/Data/CIKM2022/CIKM22Competition/"
 pklp = f"{datp}/X"
 clientp = f"{datp}/Client"
 
-# TEST = True
-TEST = False
+TEST = True
+# TEST = False
 
 # # cid, task_type, metric, K, model, score, predict
 if TEST:
     ids = [
-        # [1, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
+        [1, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
         # [2, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
         # [3, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
         # [4, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
@@ -85,7 +85,7 @@ for [cid, paras] in ids:
             train_dataY1 = train_Y.loc[i_train]
             train_dataY2 = train_Y.loc[i_tests]
 
-            i_model = model()
+            i_model = model(cid)
             i_model.fit(train_dataX1, train_dataY1)
             modelL.append(i_model)
 
@@ -121,11 +121,11 @@ with open(".record", "w") as f:
         f.write(f"{i:.6f}\n")
 
 result = pd.concat(result)
-result.to_csv(f"{datp}/Result/result0.csv", index=False, header=False)
+result.to_csv(f"{datp}/Result/result-u0.csv", index=False, header=False)
 print(result.head(), result.shape)
 
-with open(f"{datp}/Result/result1.csv", "w") as f1:
-    with open(f"{datp}/Result/result0.csv", "r") as f0:
+with open(f"{datp}/Result/result-u1.csv", "w") as f1:
+    with open(f"{datp}/Result/result-u0.csv", "r") as f0:
         for i in f0:
             i = i.strip("\n")
             i = ",".join([j[0] if j in ["0.0", "1.0"] else j for j in i.split(",") if j])
