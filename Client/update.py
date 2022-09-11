@@ -10,7 +10,7 @@ datp = "/Users/ivan/Desktop/Data/CIKM2022/CIKM22Competition/"
 pklp = f"{datp}/X"
 clientp = f"{datp}/Client"
 
-TEST = True
+# TEST = True
 TEST = False
 
 # # cid, task_type, metric, K, model, score, predict
@@ -26,26 +26,26 @@ if TEST:
         # [8, ["cls", "Error rate", k, get_model1, get_score1, get_predict1]] for k in range(2, 21)
         # [9, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
         # [10, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
-        [11, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
+        # [11, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
         # [12, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
         # [13, ["reg", "MSE", k, get_model2, get_score2, get_predict2]] for k in range(2, 21)
     ]
 else:
     ids = [
-        [1, ["cls", "Error rate", 13, get_model1, get_score1, get_predict1]],
-        [2, ["cls", "Error rate", 17, get_model1, get_score1, get_predict1]],
+        [1, ["cls", "Error rate", 3, get_model1, get_score1, get_predict1]],
+        [2, ["cls", "Error rate", 18, get_model1, get_score1, get_predict1]],
         # 3, no edge_attr
-        [3, ["cls", "Error rate", 13, get_model1, get_score1, get_predict1]],
+        [3, ["cls", "Error rate", 6, get_model1, get_score1, get_predict1]],
         [4, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
         [5, ["cls", "Error rate", 3, get_model1, get_score1, get_predict1]],
-        [6, ["cls", "Error rate", 7, get_model1, get_score1, get_predict1]],
+        [6, ["cls", "Error rate", 5, get_model1, get_score1, get_predict1]],
         # 7, no edge_attr
-        [7, ["cls", "Error rate", 2, get_model1, get_score1, get_predict1]],
-        [8, ["cls", "Error rate", 18, get_model1, get_score1, get_predict1]],
+        [7, ["cls", "Error rate", 3, get_model1, get_score1, get_predict1]],
+        [8, ["cls", "Error rate", 17, get_model1, get_score1, get_predict1]],
 
         # 10/13, more Y
         [9, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
-        [10, ["reg", "MSE", 3, get_model2, get_score2, get_predict2]],
+        [10, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
         [11, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
         [12, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],
         [13, ["reg", "MSE", 2, get_model2, get_score2, get_predict2]],

@@ -148,24 +148,6 @@ def get_predict2(x, mL):
     ], axis=0)]
 
 
-predictD = {
-    1: get_predict1,
-    2: get_predict1,
-    3: get_predict1,
-    4: get_predict1,
-    5: get_predict1,
-    6: get_predict1,
-    7: get_predict1,
-    8: get_predict1,
-
-    9: get_predict2,
-    10: get_predict2,
-    11: get_predict2,
-    12: get_predict2,
-    13: get_predict2,
-}
-
-
 def update(df, dfcid, mdlp):
     for i1, i2 in YN.items():
         if i1 == dfcid:
@@ -174,7 +156,7 @@ def update(df, dfcid, mdlp):
         with gzip.GzipFile(f"{mdlp}/{i1}-modelD.mdl", "rb") as f:
             modelD = pickle.load(f)
 
-        predict = predictD[i1]
+        predict = get_predict2
         for j in range(i2):
             df[f"cid_y_{i1}-{j}"] = predict(df[COLS], modelD[f"Y{j}"])
     return df
