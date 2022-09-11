@@ -6,7 +6,7 @@ from tqdm import tqdm
 datp = "/Users/ivan/Desktop/Data/CIKM2022/CIKM22Competition/"
 
 x = []
-for cid in [2]:
+for cid in [8]:
     _data = torch.load(f"{datp}/{cid}/train.pt")
 
     for idata in tqdm(_data):
@@ -24,10 +24,17 @@ print(x)
 corr = []
 for icol in tqdm(x.columns):
     if icol != "y":
-        corr.append([icol, abs(np.corrcoef(x[icol], x["y"])[0][1])])
+        corr.append([icol, abs(np.corrcoef(x[icol], x["y"])[0][1]), x[icol].mean()])
         # break
 
-corr = pd.DataFrame(corr).sort_values([1], ascending=False)
+corr = pd.DataFrame(corr)
+corr[3] = corr[1] + corr[2]
+print(
+    list(corr.sort_values([1], ascending=False).head(2)[0].values) +
+    list(corr.sort_values([3], ascending=False).head(2)[0].values)
+)
+
+corr = corr.sort_values([1], ascending=False)
 l_corr = list(corr.head(100)[0].values)
 print(l_corr)
 
