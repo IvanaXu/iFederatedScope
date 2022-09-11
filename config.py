@@ -7,6 +7,11 @@ import pandas as pd
 import warnings
 warnings.filterwarnings("ignore")
 
+from gensim.models import Word2Vec
+mdlf = "/Users/ivan/Desktop/Data/CIKM2022/CIKM22Competition/Server/NLP.model"
+NLP = Word2Vec.load(mdlf)
+NLP_c = 256
+
 YN = {
     1: 1, 2: 1, 3: 1, 4: 1, 5: 1,
     6: 1, 7: 1, 8: 1, 9: 1, 10: 10,
@@ -16,7 +21,8 @@ COLS = ["e_x", "e_l", "y_l"] + \
        [f"x_{n}_{i}" for i in range(38) for n in range(7)] + \
        [f"e_{n}_{i}" for i in range(8) for n in range(7)] + \
        [f"ei_{n}_{i}" for i in range(111+1) for n in range(3)] + \
-       [f"cid_y_{i1}-{j}" for i1, i2 in YN.items() for j in range(i2)]
+       [f"cid_y_{i1}-{j}" for i1, i2 in YN.items() for j in range(i2)] + \
+       [f"em_{i}" for i in range(NLP_c)]
 
 
 def get_data(path1, path2, cid, data_type, top=0):
@@ -27,6 +33,7 @@ def get_data(path1, path2, cid, data_type, top=0):
     #
     ydata, index_data, lxdata, ledata = [], [], [], []
     ei0data, ei1data, ei2data = [], [], []
+    ej0data = []
     xdatal = [x1data, x2data, x3data, x4data, x5data, x6data, x7data] = [[] for _ in range(7)]
     edatal = [e1data, e2data, e3data, e4data, e5data, e6data, e7data] = [[] for _ in range(7)]
 
@@ -54,6 +61,9 @@ def get_data(path1, path2, cid, data_type, top=0):
         ei1data.append([1 if i1 in ei1 else 0 for i1 in range(top+1)])
         ei2 = list(np.array(idata.edge_index)[0]) + list(np.array(idata.edge_index)[1])
         ei2data.append([1 if i2 in ei2 else 0 for i2 in range(top+1)])
+
+        ej0 = [str(i) for i in np.array(idata.edge_index)[1]]
+        ej0data.append(np.mean(NLP.wv[ej0], axis=0))
 
         ydata.append(np.array(idata.y)[0])
         index_data.append(idata.data_index)
@@ -89,6 +99,10 @@ def get_data(path1, path2, cid, data_type, top=0):
             _data[f"cid_y_{i1}-{j}"] = -1
             _xcols.append(f"cid_y_{i1}-{j}")
 
+    for i in range(NLP_c):
+        _data[f"em_{i}"] = np.array(ej0data)[:, i]
+        _xcols.append(f"em_{i}")
+
     # COLS
     assert len(set(_xcols) - set(COLS)) == 0
     for icol in COLS:
@@ -104,9 +118,9 @@ def get_model1():
     import lightgbm as lgb
     return lgb.LGBMClassifier(
         objective="regression",
-        bagging_fraction=0.80,
-        feature_fraction=0.80,
-        max_depth=9,
+        bagging_fraction=0.50,
+        feature_fraction=0.50,
+        max_depth=10,
         n_estimators=100,
         verbose=-1,
         n_jobs=-1,
@@ -128,9 +142,9 @@ def get_model2():
     import lightgbm as lgb
     return lgb.LGBMRegressor(
         objective="regression",
-        bagging_fraction=0.80,
-        feature_fraction=0.80,
-        max_depth=9,
+        bagging_fraction=0.50,
+        feature_fraction=0.50,
+        max_depth=10,
         n_estimators=100,
         verbose=-1,
         n_jobs=-1,
